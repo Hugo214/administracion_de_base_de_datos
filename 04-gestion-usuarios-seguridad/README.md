@@ -28,3 +28,29 @@ ALTER USER 'app_user'@'localhost' PASSWORD EXPIRE;
 
 -- Eliminar usuario
 DROP USER 'app_user'@'localhost';
+
+-- Privilegios globales (todo el servidor)
+GRANT SUPER, PROCESS, SHOW DATABASES ON *.* TO 'dba'@'localhost';
+
+-- Privilegios por base de datos
+GRANT SELECT, INSERT, UPDATE, DELETE ON mi_bd.* TO 'app_user'@'localhost';
+
+-- Privilegios por tabla
+GRANT SELECT ON mi_bd.usuarios TO 'reportes'@'%';
+GRANT UPDATE (email, telefono) ON mi_bd.usuarios TO 'soporte'@'%';
+
+-- Privilegios por columna (MySQL 8.0+)
+GRANT SELECT (id, nombre), UPDATE (estado) ON mi_bd.pedidos TO 'callcenter'@'%';
+
+-- Rol (MySQL 8.0+)
+CREATE ROLE 'lectura_solo';
+GRANT SELECT ON mi_bd.* TO 'lectura_solo';
+GRANT 'lectura_solo' TO 'analista1'@'%';
+SET DEFAULT ROLE 'lectura_solo' TO 'analista1'@'%';
+
+-- Ver privilegios
+SHOW GRANTS FOR 'app_user'@'localhost';
+SHOW GRANTS FOR CURRENT_USER();
+
+-- Revocar privilegios
+REVOKE INSERT, UPDATE ON mi_bd.* FROM 'app_user'@'localhost';
