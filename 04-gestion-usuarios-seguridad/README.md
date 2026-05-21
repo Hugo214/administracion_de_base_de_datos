@@ -54,3 +54,18 @@ SHOW GRANTS FOR CURRENT_USER();
 
 -- Revocar privilegios
 REVOKE INSERT, UPDATE ON mi_bd.* FROM 'app_user'@'localhost';
+
+
+-- Rol de login
+CREATE ROLE app_user WITH LOGIN PASSWORD 'SecurePass123!';
+
+-- Rol sin login (para grupos)
+CREATE ROLE developers NOLOGIN;
+
+-- Rol con privilegios especiales
+CREATE ROLE dba WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'DbaPass456!';
+
+-- Crear rol con límites
+CREATE ROLE readonly WITH LOGIN PASSWORD 'Read789!' 
+    CONNECTION LIMIT 5 
+    VALID UNTIL '2025-12-31';
